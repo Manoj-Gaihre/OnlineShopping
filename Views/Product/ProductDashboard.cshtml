@@ -1,0 +1,36 @@
+﻿@model IEnumerable<OnlineShopping.Models.Product>
+
+    @* tiltle dekanako laghi *@
+@{
+    ViewData["Title"] = "Product Dashboard";
+}
+
+@* halhka *@
+<h1>Product Dashboard</h1>
+
+@* search items ko laghi asp-action rakhne *@
+<form asp-action="ProductDashboard">
+
+    @* search bar dekhaunako lafghi title addd garako ho *@
+    Title:<input type="text" name="Title" /> <input type="submit" value="Search" />
+</form>
+
+<table class="table">
+
+    <tbody>
+        @* tr lloop bahira rakhne, image ko tala title price, category name an ddetails rakhe td vitra but are sab hataune *@
+        <tr>
+            @foreach (var item in Model)
+            {
+                <td>
+                    @* @Html.DisplayFor(modelItem => item.ProductImage) *@
+                    <img src="@item.ProductImage" width="100" height="100" /> <br />
+                    @Html.DisplayFor(modelItem => item.Title)<br />
+                    Price: Rs. @Html.DisplayFor(modelItem => item.Price) <br />
+                    @Html.DisplayFor(modelItem => item.Category.Name) <br />
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>

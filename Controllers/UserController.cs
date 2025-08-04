@@ -60,7 +60,7 @@ namespace OnlineShopping.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([Bind("UserName,Password")] UserViewModel userViewModel)
+        public async Task<IActionResult> Register([Bind("UserName,Password,ConfirmPassword")] UserViewModel userViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -75,6 +75,11 @@ namespace OnlineShopping.Controllers
                 }
                 else
                 {
+                    user.UserName=userViewModel.UserName;
+                    user.Password=userViewModel.Password;
+                    user.UserType = "normal";
+
+
                     _context.Add(user);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));

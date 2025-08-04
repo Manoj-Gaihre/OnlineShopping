@@ -28,6 +28,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
 
+
                         @* Product ra category add to the home page garako *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Manage Category</a>
@@ -35,8 +36,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Manage Product</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Manage User</a>
+                        </li>
                     </ul>
                 </div>
+                @* add the registeer in the nav so before the div of nav *@
+                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
             </div>
         </nav>
     </header>

@@ -16,5 +16,6 @@ namespace OnlineShopping.Data
 
         public DbSet<OnlineShopping.Models.Category> Category { get; set; } = default!;
         public DbSet<OnlineShopping.Models.Product> Product { get; set; } = default!;
+        public DbSet<OnlineShopping.Models.User> User { get; set; } = default!;
     }
 }

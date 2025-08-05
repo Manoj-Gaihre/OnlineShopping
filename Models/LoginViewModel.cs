@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Login page banako
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopping.Models
 {

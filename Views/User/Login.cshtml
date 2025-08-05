@@ -10,7 +10,8 @@
     <div class="col-md-4">
         <form asp-action="Login">
             @* this allows to show the error if the same name of the user is found while registering the user *@
-            @ViewData["ErrorMessage"]
+            @* make the error appear red  *@
+            <p style="color:red;font-weight:900">@ViewData["ErrorMessage"]</p>
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">

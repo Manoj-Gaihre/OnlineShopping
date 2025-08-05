@@ -91,6 +91,41 @@ namespace OnlineShopping.Controllers
         }
 
 
+        //login page ko laghi
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: User/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("UserName,Password")] LoginViewModel loginViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userExist = (from u in _context.User where u.UserName == loginViewModel.UserName && u.Password==loginViewModel.Password select u).ToList();
+
+                //user count garne
+                if (userExist.Count > 0)
+                {
+                    return RedirectToAction("ProductDashboard", "Product");
+
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = "Username or password incorrect";
+                    
+                }
+
+
+            }
+            return View(loginViewModel);
+        }
+
+
 
         // GET: User/Create
         public IActionResult Create()

@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopping.Data;
 using OnlineShopping.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OnlineShopping.Controllers
 {
+    [Authorize(Roles ="admin")]
     public class UserController : Controller
     {
         private readonly OnlineShoppingContext _context;
@@ -50,6 +55,7 @@ namespace OnlineShopping.Controllers
 
         //copy and paste the Create method of both get and post and make the register method
         // GET: User/Create
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -58,6 +64,7 @@ namespace OnlineShopping.Controllers
         // POST: User/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserName,Password,ConfirmPassword")] UserViewModel userViewModel)
@@ -82,13 +89,68 @@ namespace OnlineShopping.Controllers
 
                     _context.Add(user);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("ProductDashboard","Product");
                 }
 
                    
             }
             return View(userViewModel);
         }
+
+
+        //login page ko laghi
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: User/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("UserName,Password")] LoginViewModel loginViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userExist = (from u in _context.User where u.UserName == loginViewModel.UserName && u.Password==loginViewModel.Password select u).ToList();
+
+                //user count garne
+                if (userExist.Count > 0)
+                {
+                    List<Claim> claims = new List<Claim>();
+                    Claim claim = new Claim(ClaimTypes.Email, userExist[0].UserName);
+                    Claim claim1=new Claim(ClaimTypes.Role, userExist[0].UserType);
+                    claims.Add(claim);
+                    claims.Add(claim1);
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                    return RedirectToAction("ProductDashboard", "Product");
+
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = "Username or password incorrect";
+                    
+                }
+
+
+            }
+            return View(loginViewModel);
+        }
+
+
+        //logout page ko laghi
+        public async Task <IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("ProductDashboard", "Product");
+        }
+
+       
 
 
 
